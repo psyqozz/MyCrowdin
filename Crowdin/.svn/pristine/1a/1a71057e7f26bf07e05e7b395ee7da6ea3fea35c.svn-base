@@ -1,0 +1,56 @@
+security:
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: username
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            provider: app_user_provider
+            # La connexion n'est pas requise sur toutes les pages
+            anonymous: true
+
+            form_login:
+                # Le nom de la route de la page de connexion
+                login_path: security_login
+                check_path: security_login
+                # Securisation des formulaires
+                csrf_token_generator: security.csrf.token_manager
+                # La page par defaut apres une connexion reussie
+                default_target_path: user
+            
+            logout:
+                # La route où se trouve le process de deconnexion
+                path: security_logout
+                # La route sur laquelle doit etre rediriger l'utilisateur apres une deconnexion
+                target: /
+
+            # activate different ways to authenticate
+
+            # http_basic: true
+            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: true
+            # https://symfony.com/doc/current/security/form_login_setup.html
+    always_authenticate_before_granting:  true
+    role_hierarchy:
+        # Users with the ROLE_TRAD role will also have the ROLE_USER role
+        ROLE_TRAD: ROLE_USER
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        # Les regles de securité
+        # Là dans ce cas seul les utilisateurs ayant le rôle ROLE_ADMIN
+        # peuvent acceder à toutes les pages commençant par /admin
+        - { path: ^/user/trad, roles: ROLE_TRAD }
+        - { path: ^/user, roles: ROLE_USER }
+        # - { path: ^/profile, roles: ROLE_USER }

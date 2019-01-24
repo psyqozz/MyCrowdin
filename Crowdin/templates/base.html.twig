@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %} Crowdin {% endblock %}</title>
+        <link rel="icon" type="image/png" sizes="32x32" href="https://d1pwix07io15pr.cloudfront.net/v3d8ab079bb/favicons/favicon-32x32.png?">
+        <link rel="stylesheet" href="https://bootswatch.com/4/lux/bootstrap.min.css" media="screen">
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" {% if is_granted("ROLE_USER") %} href="/user/" {% else %} href="/" {% endif %}>Crowdin</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor02">
+            <ul class="navbar-nav mr-auto">
+                {% if is_granted("ROLE_USER") %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('user_show') }}">Profil <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('project_show') }}">Mes projets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('allProject_show') }}">Explorer {% if is_granted("ROLE_TRAD") %} et Traduire {% endif %}</a>
+                </li>
+                {% endif %}
+            </ul>
+
+            <ul class="navbar-nav">
+                {% if is_granted("ROLE_USER") %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('user_config') }}"><i class="fa fa-cog fa-lg"></i> <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('security_logout') }}">Deconnexion <span class="sr-only">(current)</span></a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/registration">S'Inscrire <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/security">Se Connecter</a>
+                </li>
+                {% endif %}
+            </ul>
+            </form>
+        </div>
+        </nav>
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

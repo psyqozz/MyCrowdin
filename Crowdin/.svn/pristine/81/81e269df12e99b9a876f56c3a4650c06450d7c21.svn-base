@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1> Les projets :</h1>
+    <ul class="list-group">
+      {% for oneProject in projects %}
+
+        <li class="list-group-item align-items-center"><p style="margin-bottom: 1rem;"><a class="text-info" style="font-size: 22px" href="{{ path('sources_show', { 'id': oneProject.id }) }}"> {{ oneProject.nameProject }}</a></p>
+            <p> {{ oneProject.user.username }} - {{ oneProject.langOrigin.libelleLangage }} </p>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+<div class="container" style="margin-top:2em">
+    <div class="row">
+        <div class="col-sm-4" style="">
+            <div class="card border-primary mb-3" style="max-width: 20rem;">
+            <div class="card-header">Profil </div>
+                <div class="card-body">
+                    <h4 class="card-title text-primary">{{ user.username }}</h4>
+                    <blockquote class="blockquote">
+                        <footer class="blockquote-footer">Email </footer>
+                        <p class="card-text lead">{{ user.email }}</p>
+                    </blockquote>
+                    <hr>
+                    <blockquote class="blockquote">
+                        <footer class="blockquote-footer">À propos de moi </footer>
+                        <p class="mb-0">{{ user.description }}</p>
+                    </blockquote>
+                    {% if is_granted("ROLE_TRAD") %}
+                    <blockquote class="blockquote">
+                        <footer class="blockquote-footer">Statut </footer>
+                        <p class="mb-0">traducteur</p>
+                    </blockquote>
+                    {% endif %}
+                    <blockquote class="blockquote">
+                        <footer class="blockquote-footer"> Mes Langues</footer>
+                        <div class="text-center">
+                            {% for oneLang in user.langages %}
+                                <span class="badge badge-dark">{{ oneLang.libelleLangage }}</span>
+                            {% endfor %}
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-8">
+            {% if is_granted("ROLE_TRAD") %}
+                {% if date is not null %}
+                <p class="lead text-primary" style="margin:0;">Liste des projets traduits :</p>
+                {% endif %}
+	        {% for oneProject in project %}
+	            <p class="lead" style="margin:0; margin-left: 20px"> <span class="text-primary">-></span> {{ oneProject.name_project }}</p>
+	        {% endfor %}
+            {% endif %}
+            <div class="graph" style="margin-top: 30px">
+                {# <p class="lead">Un petit graphique 📈</p>  #}
+            {% if date is not null %}
+                <div id="container" style="width:100%; height:400px;"></div>    
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block javascripts %}
+<script type="text/javascript"> 
+            var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'container'
+                },
+                title: {
+                    text: 'Nombre de Traduction fait par mois'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: { // don't display the dummy year
+                        month: '%e. %b',
+                        year: '%b'
+                    },
+                    title: {
+                        text: 'Date'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'Nb de traduction'
+                    },
+                    min: 0
+                },
+                series: [{
+                    data: [ {{ date }} ],
+                }]
+            });
+</script>
+{% endblock %}
